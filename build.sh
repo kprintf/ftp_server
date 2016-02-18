@@ -1,6 +1,7 @@
 #!/bin/bash
 CC_PARMS=" --std=gnu99 -g -lcrypt -lgcrypt -Wall -DINTERACTIVE_MODE"
-
+mkdir -p obj 
+mkdir -p bin
 cd src
 for i in *.c
 do
