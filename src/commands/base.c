@@ -38,7 +38,7 @@ int ftp_op_pass(session_t *s)
 	
 	if(user_login(s->name,s->pswd) != USER_ID_NOT_EXISTS_OR_ERROR)
 	{
-		char buf[32];
+		char buf[10+strlen(s->name)];
 		char *home;
 		sprintf(buf,"ftp_%s",s->name);
 		thread_name(buf);
@@ -68,7 +68,7 @@ int ftp_op_stou(session_t *s)
 {
 	FILE *fp;
 	int here_we_fork = -1;
-	char nmbuf[30];
+	char nmbuf[30+strlen(s->name)];
 
 	sprintf(nmbuf,"TMP%sXXXXXX", s->name);
 
@@ -307,7 +307,7 @@ int ftp_op_mkd(session_t *s)
 int ftp_op_abor(session_t *s)
 {
 	int pid;
-       	char buf[100];
+       	char buf[30+strlen(s->name)];
 
 	sprintf(buf,"transmission[%s]", s->name);
 
