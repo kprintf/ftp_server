@@ -47,7 +47,7 @@ int user_id(char *name)
 	}
 	else
 	{
-		char buf[200];
+		char buf[20+strlen(name)];
 		int res;
 
 		sprintf(buf,"user[%s]", name);
@@ -139,7 +139,7 @@ int user_login(char *name, char *pswd)
 	}
 	else
 	{
-		char buf[200];
+		char buf[40+strlen(name)];
 		int id;
 		sprintf(buf,"user[%s]", name);
 		if((id=cfg_read_int(buf,-1))==-1)
@@ -157,12 +157,12 @@ int user_login(char *name, char *pswd)
 						log_infos("Got wrong password while trying to login as %s", name);
 					}
 					else
-						return id;
+						return free(str), id;
 				}
-				return -1;
+				return free(str), -1;
 			}	
 			else	
-				return id;	
+				return free(str), id;	
 		}
 		return -1;
 	}
