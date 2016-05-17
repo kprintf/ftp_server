@@ -258,7 +258,8 @@ void server_session(int sck)
 		
 		session->svptr = NULL;
 		bzero(session->in_buf, 300);
-		read(sck, session->in_buf, 300);
+		if(read(sck, session->in_buf, 290)<=0)
+			break;
 
 		if(cfg_offline()) /*That means server has shutted down while we were reading command*/
 			break;
@@ -353,7 +354,15 @@ void server_session(int sck)
 	ftp_code_send(sck, FTP_C_CLOSING);
 	session_clean(session);
 	free(session);
+	//close(sck);
 	exit(0);
+}
+
+void server_sigchld(int sig)
+{
+	int sv=errno;
+    	while(waitpid((pid_t)(-1),0,WNOHANG)>0);
+	errno=sv;
 }
 
 void server_main(void)
@@ -363,10 +372,11 @@ void server_main(void)
 	struct sockaddr client;
 	socklen_t c=sizeof(struct sockaddr_in);
 	char msg_buf[256];	
-
-
-
-
+	struct sigaction sa;
+	sa.sa_handler = &server_sigchld;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART | SA_NOCLDSTOP | SA_NOCLDWAIT;
+	sigaction(SIGCHLD,&sa,0);
 	log_info("server_main()...");
 
 	cfg_write_int("pid", getpid());
