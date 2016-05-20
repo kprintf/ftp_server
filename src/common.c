@@ -74,7 +74,7 @@ char* reimpl_realpath(char *path, char *buf)
 		return NULL;
 
 	if(buf == NULL)
-		buf = malloc(PATH_MAX);
+		buf = malloc(PATH_MAX), buf[0]=0;
 
 
 	if(*path!='/')

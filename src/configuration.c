@@ -205,7 +205,7 @@ int cfg_read_int(char *name, int def)
 {
 #ifdef INTERACTIVE_MODE
 	int sck, res;
-	char int_buf[40];
+	char int_buf[40]="N";
 
 
 	sck = open_file_socket(SOCK_PATH);
@@ -243,18 +243,17 @@ char* cfg_read_str(char *name, char *def)
 
 
 	str_buf = malloc(512);
+	strcpy(str_buf,"N ");
 	sck = open_file_socket(SOCK_PATH);
 	dprintf(sck,"R%s%c", name, 0);
 	recv(sck, str_buf, 512, 0);
 	close(sck);
 	if(str_buf[0]=='N')
-		return def;
+		return free(str_buf), def;
 	else
 	{
 		char *res_str = strdup(&str_buf[1]);
-		free(str_buf);
-
-		return res_str;
+		return free(str_buf), res_str;
 	}
 #else
 	char *tmp;
@@ -280,7 +279,7 @@ char *cfg_find_key(char *beg, int skip, char *def)
 	recv(sck, str_buf, 512, 0);
 	close(sck);
 	if(str_buf[0]=='N')
-		return def;
+		return free(str_buf),def;
 	else
 	{
 		char *res_str = strdup(&str_buf[1]);

@@ -46,7 +46,6 @@ int main(int argc, char **argv)
 	log_init();
 	cfg_init();
 	auth_init();
-
 #ifdef INTERACTIVE_MODE
 	thread_name("ftp CLI");
 	switch(pid=fork())

@@ -3,12 +3,12 @@
 
 int ftp_op_user(session_t *s)
 {
-	s->name = strdup(s->arg);
 	
-	if(user_id(s->name) == USER_ID_NOT_EXISTS_OR_ERROR)
+	if(user_id(s->arg) == USER_ID_NOT_EXISTS_OR_ERROR)
 		return FTP_C_NOT_LOGGED_IN;
 	else
 	{
+		s->name = strdup(s->arg);
 		/*char *tmp1;
 		tmp1 = malloc(strlen(s->name)+30);
 		
@@ -34,9 +34,9 @@ int ftp_op_user(session_t *s)
 
 int ftp_op_pass(session_t *s)
 {
-	s->pswd = strdup(s->arg);
+	//s->pswd = strdup(s->arg);
 	
-	if(user_login(s->name,s->pswd) != USER_ID_NOT_EXISTS_OR_ERROR)
+	if(user_login(s->name,s->arg) != USER_ID_NOT_EXISTS_OR_ERROR)
 	{
 		char buf[10+strlen(s->name)];
 		char *home;
@@ -45,6 +45,7 @@ int ftp_op_pass(session_t *s)
 		home = user_home(user_id(s->name));
 		chdir(home);
 		free(home);
+
 		return s->logged = 1, FTP_C_LOGGED_IN;
 	}
 	else

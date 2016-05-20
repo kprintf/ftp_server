@@ -32,7 +32,7 @@ typedef struct
 			*arg,
 			*svptr, 
 			*name,
-			*pswd,
+	//		*pswd,
 			*base_dir, 
 			*frepr,
 			*home_dir;
@@ -67,7 +67,7 @@ void session_clean(session_t *s)
 	s->in_buf = mfree(s->in_buf);
 	s->frepr = mfree(s->frepr);
 	s->name = mfree(s->name);
-	s->pswd = mfree(s->pswd);
+	//s->pswd = mfree(s->pswd);
 	s->base_dir = mfree(s->base_dir);
 	s->home_dir = mfree(s->home_dir);
 	/*TODO: closing sockets and transmission threads if alive*/
@@ -330,10 +330,10 @@ void server_session(int sck)
 				}
 				if(strstr(tmp,session->base_dir)!=tmp)
 				{
-					mfree(tmp);
+					free(tmp);
 					ftp_code_send(sck, FTP_C_FILE_UNAVAILABLE);
 					continue;
-				}
+				}else free(tmp);
 			}
 			else if(operations_table[cmd_n].flags & OP_FLAG_FLCREATE)
 			{
@@ -470,7 +470,9 @@ void server_cli(int server_pid)
 
 			while((ptr=cfg_find_key(beg,cnt,NULL)))
 			{
-				printf("%4i %s = %s\n", ++cnt, ptr, cfg_read_str(ptr,"(none)"));
+				char *k;
+				printf("%4i %s = %s\n", ++cnt, ptr, k=cfg_read_str(ptr,"(none)"));
+				free(k);
 				free(ptr);
 			}
 			
