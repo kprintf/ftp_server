@@ -345,6 +345,7 @@ void server_session(int sck)
 					ftp_code_send(sck, FTP_C_FILE_UNAVAILABLE);
 					continue;
 				}
+				else free(tmp);
 			}
 		}
 		
